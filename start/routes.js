@@ -19,3 +19,6 @@ const Route = use('Route')
 Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 })
+
+Route.get('roles', 'RoleController.index')
+Route.get('roles/:id', 'RoleController.show')

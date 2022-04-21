@@ -10,7 +10,7 @@ class UserSchema extends Schema {
       table.string('username', 80).notNullable().unique()
       table.string('email', 254).notNullable().unique()
       table.string('password', 60).notNullable()
-      table.integer('role_id').references('id').inTable('roles')
+      table.integer('role_id').references('id').inTable('roles').defaultTo(3)
       table.timestamps()
     })
   }

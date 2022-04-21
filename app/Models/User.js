@@ -10,6 +10,37 @@ class User extends Model {
   static get table () {
     return 'users'
   }
+
+  static get hidden () {
+    return [
+      'password'
+    ]
+  }
+
+  static get loginData () {
+    return [
+      'email',
+      'password'
+    ]
+  }
+
+  static get chadSignUp () {
+    return [
+      'email',
+      'password',
+      'role_id',
+      'username'
+    ]
+  }
+
+  static get signUp () {
+    return [
+      'email',
+      'password',
+      'username'
+    ]
+  }
+
   static boot () {
     super.boot()
 

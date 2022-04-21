@@ -21,14 +21,28 @@ Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 })
 
-Route.get('roles', 'RoleController.index')
-Route.get('roles/:id', 'RoleController.show')
+Route.resource('roles', 'RoleController')
+  .middleware(['auth:jwt'])
+  .apiOnly()
+  .except(['store', 'update'])
 
 Route.resource('api-tokens', 'ApiTokenController')
+  .validator(new Map([
+    [['api-tokens.store'], ['StoreApitoken']]
+  ]))
   .middleware(['auth:jwt'])
   .apiOnly()
   .except(['update'])
 
 Route.post('login', 'AuthController.logIn')
+  .validator('Login')
 
 Route.post('sign-up', 'AuthController.signUp')
+  .validator('Signup')
+
+Route.resource('memes', 'MemeController')
+  .validator(new Map([
+    [['memes.store', 'memes.update'], ['StoreMeme']]
+  ]))
+  .middleware(['auth:jwt'])
+  .apiOnly()

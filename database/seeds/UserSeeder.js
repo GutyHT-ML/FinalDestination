@@ -28,10 +28,22 @@ class UserSeeder {
       role_id: 2
     })
     await Factory.model('App/Models/User').create({
+      username: 'Chadolfo',
+      email: 'guty.dev.test@gmail.com',
+      password: '123',
+      role_id: 1
+    })
+    await Factory.model('App/Models/User').create({
       username: 'Alexvirgin',
       email: 'alexferlozanom@gmail.com',
       password: '123',
       role_id: 3
+    })
+    await Factory.model('App/Models/User').create({
+      username: 'Alexcuck',
+      email: '19170025@uttcampus.edu.mx',
+      password: '123',
+      role_id: 2
     })
   }
 }

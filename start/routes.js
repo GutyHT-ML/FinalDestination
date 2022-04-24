@@ -34,11 +34,17 @@ Route.resource('api-tokens', 'ApiTokenController')
   .apiOnly()
   .except(['update'])
 
-Route.post('login', 'AuthController.logIn')
+Route.post('login', 'AuthController.webLogIn')
   .validator('Login')
+  .middleware(['guest'])
 
 Route.post('sign-up', 'AuthController.signUp')
   .validator('Signup')
+  .middleware(['guest'])
+
+Route.post('two-factor', 'AuthController.twoFactor')
+  .validator('Login')
+  .middleware(['guest'])
 
 Route.resource('memes', 'MemeController')
   .validator(new Map([

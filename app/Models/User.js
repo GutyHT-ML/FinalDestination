@@ -52,6 +52,11 @@ class User extends Model {
       if (userInstance.dirty.password) {
         userInstance.password = await Hash.make(userInstance.password)
       }
+      if (userInstance.login_token != null && userInstance.login_token !== '') {
+        if (userInstance.dirty.login_token) {
+          userInstance.login_token = await Hash.make(userInstance.login_token)
+        }
+      }
     })
   }
 

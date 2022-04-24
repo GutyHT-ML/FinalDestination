@@ -7,7 +7,11 @@ class AccessController {
   }
 
   onLogin (data) {
-    console.log(this.socket.id)
+    console.log(data.grantedAccess)
+  }
+
+  onAuth (data) {
+    console.log(data)
   }
 }
 

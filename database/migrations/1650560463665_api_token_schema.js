@@ -10,7 +10,7 @@ class ApiTokenSchema extends Schema {
       table.increments()
       table.string('key').unique()
       table.string('description')
-      table.integer('used_by').unsigned().references('id').inTable('users')
+      table.integer('used_by').unsigned().references('id').inTable('users').nullable()
       table.integer('issued_by').unsigned().references('id').inTable('users').nullable()
       table.date('expiry_date')
       table.boolean('active').defaultTo(true)

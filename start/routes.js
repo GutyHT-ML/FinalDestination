@@ -28,7 +28,7 @@ Route.resource('roles', 'RoleController')
 
 Route.resource('api-tokens', 'ApiTokenController')
   .validator(new Map([
-    [['api-tokens.store'], ['StoreApitoken']]
+    [['api-tokens.store'], ['StoreApiToken']]
   ]))
   .middleware(['auth:jwt'])
   .apiOnly()
@@ -44,5 +44,8 @@ Route.resource('memes', 'MemeController')
   .validator(new Map([
     [['memes.store', 'memes.update'], ['StoreMeme']]
   ]))
-  .middleware(['auth:jwt'])
+  .middleware(new Map([
+    [['*'], ['auth:jwt']],
+    [['update', 'destroy'], ['apiToken']]
+  ]))
   .apiOnly()

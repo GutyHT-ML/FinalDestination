@@ -24,8 +24,8 @@ Factory.blueprint('App/Models/User', (faker, i, data) => {
 })
 
 Factory.blueprint('App/Models/Role', (faker, i, data) => {
-    return {
-        name: data.name
-    }
-  })
-  
+  return {
+    name: data.name
+  }
+})
+

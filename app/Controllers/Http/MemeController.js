@@ -5,6 +5,10 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Meme = use('App/Models/Meme')
+const Role = use('App/Models/Role')
+const ApiToken = use('App/Models/ApiToken')
+const Hash = use('Hash')
+const Database = use('Database')
 
 /**
  * Resourceful controller for interacting with memes
@@ -69,15 +73,50 @@ class MemeController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
-    const data = request.only(Meme.update)
-    const meme = await Meme.findOrFail(params.id)
-    meme.name = data.name
-    meme.url = data.url
-    await meme.save()
-    return response.ok({
-      msg: 'Ok',
-      data: meme
+  async update ({ params, request, response, auth }) {
+    const user = await auth.getUser()
+    console.log(user.role_id)
+    if (user.role_id === Role.Chad) {
+      const data = request.only(Meme.update)
+      const meme = await Meme.findOrFail(params.id)
+      meme.name = data.name
+      meme.url = data.url
+      await meme.save()
+      return response.ok({
+        msg: 'Ok',
+        data: meme
+      })
+    }
+    const key = request.input('api_key')
+    const token = await ApiToken.findBy('key', key)
+    if (!token) {
+      return response.unauthorized({
+        msg: 'Token invalido',
+        data: null
+      })
+    }
+    if (token.active === false) {
+      return response.unauthorized({
+        msg: 'Token invalido',
+        data: null
+      })
+    }
+    if (token.key === key) {
+      const data = request.only(Meme.update)
+      const meme = await Meme.findOrFail(params.id)
+      meme.name = data.name
+      meme.url = data.url
+      await meme.save()
+      token.used_by = user.id
+      await token.save()
+      return response.ok({
+        msg: 'Ok',
+        data: meme
+      })
+    }
+    return response.unauthorized({
+      msg: 'Token invalido',
+      data: null
     })
   }
 
@@ -89,13 +128,46 @@ class MemeController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
-    const meme = await Meme.findOrFail(params.id)
-    meme.active = !meme.active
-    await meme.save()
-    return response.ok({
-      msg: 'Ok',
-      data: meme
+  async destroy ({ params, request, response, auth }) {
+    const user = await auth.getUser()
+    console.log(user.role_id)
+    if (user.role_id === Role.Chad) {
+      const meme = await Meme.findOrFail(params.id)
+      meme.active = !meme.active
+      await meme.save()
+      return response.ok({
+        msg: 'Ok',
+        data: meme
+      })
+    }
+    const key = request.input('api_key')
+    const token = await ApiToken.findBy('key', key)
+    if (!token) {
+      return response.unauthorized({
+        msg: 'Token invalido',
+        data: null
+      })
+    }
+    if (token.active === false) {
+      return response.unauthorized({
+        msg: 'Token invalido',
+        data: null
+      })
+    }
+    if (token.key === key) {
+      const meme = await Meme.findOrFail(params.id)
+      meme.active = !meme.active
+      await meme.save()
+      token.used_by = user.id
+      await token.save()
+      return response.ok({
+        msg: 'Ok',
+        data: meme
+      })
+    }
+    return response.unauthorized({
+      msg: 'Token invalido',
+      data: null
     })
   }
 }

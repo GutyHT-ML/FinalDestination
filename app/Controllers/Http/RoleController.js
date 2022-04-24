@@ -36,7 +36,8 @@ class RoleController {
    */
   async show ({ params, request, response, view }) {
     const role = await Role.findOrFail(params.id)
-    return response.json({
+    await role.load('users')
+    return response.ok({
       msg: 'Ok',
       data: role
     })

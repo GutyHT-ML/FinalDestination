@@ -18,12 +18,13 @@ module.exports = {
   | Function - Receives the current origin and should return one of the above values.
   |
   */
-  origin: function (currentOrigin) {
-    if (Env.get('NODE_ENV') === 'production') {
-      return currentOrigin === 'admin.salutemonte.space'
-    }
-    return true
-  },
+  // origin: function (currentOrigin) {
+  //   if (Env.get('NODE_ENV') === 'production') {
+  //     return currentOrigin === 'admin.salutemonte.space'
+  //   }
+  //   return true
+  // },
+  origin: true,
 
   /*
   |--------------------------------------------------------------------------

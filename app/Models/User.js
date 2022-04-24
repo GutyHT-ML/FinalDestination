@@ -70,7 +70,15 @@ class User extends Model {
   }
 
   role () {
-    return this.belongsTo('App/Models/Role')
+    return this.belongsTo('App/Models/Role', 'role_id', 'id')
+  }
+
+  apiTokens () {
+    return this.hasMany('App/Models/ApiToken', 'id', 'issued_by')
+  }
+
+  usedApiTokens () {
+    return this.hasMany('App/Models/ApiToken', 'id', 'used_by')
   }
 }
 

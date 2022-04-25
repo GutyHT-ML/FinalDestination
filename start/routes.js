@@ -38,6 +38,11 @@ Route.post('login', 'AuthController.webLogIn')
   .validator('Login')
   .middleware(['guest'])
 
+Route.post('login', 'AuthController.appLogIn')
+  .prefix('app')
+  .validator('Login')
+  .middleware(['guest'])
+
 Route.post('sign-up', 'AuthController.signUp')
   .validator('Signup')
   .middleware(['guest'])
@@ -45,6 +50,13 @@ Route.post('sign-up', 'AuthController.signUp')
 Route.post('two-factor', 'AuthController.twoFactor')
   .validator('Login')
   .middleware(['guest'])
+
+Route.post('three-factor', 'AuthController.authRequest')
+  .validator('Login')
+  .middleware(['guest'])
+
+Route.post('auth-confirmation', 'AuthController.authResponse')
+  .middleware(['auth:jwt'])
 
 Route.resource('memes', 'MemeController')
   .validator(new Map([

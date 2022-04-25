@@ -28,10 +28,10 @@ class UserSeeder {
       role_id: 2
     })
     await Factory.model('App/Models/User').create({
-      username: 'Chadolfo',
+      username: 'Cuckyfuxx',
       email: 'guty.dev.test@gmail.com',
       password: '123',
-      role_id: 1
+      role_id: 2
     })
     await Factory.model('App/Models/User').create({
       username: 'Alexvirgin',

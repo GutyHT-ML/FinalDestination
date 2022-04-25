@@ -6,6 +6,14 @@ class AccessController {
     this.request = request
   }
 
+  onRequest (data) {
+    console.log(data)
+  }
+
+  onResponse (data) {
+    console.log(data)
+  }
+
   onLogin (data) {
     console.log(data.grantedAccess)
   }

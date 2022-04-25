@@ -9,6 +9,7 @@ const User = use('App/Models/User')
 const Role = use('App/Models/Role')
 const Env = use('Env')
 const Hash = use('Hash')
+const Ws = use('Ws')
 
 /**
  * Resourceful controller for interacting with auths
@@ -98,8 +99,53 @@ class AuthController {
     })
   }
 
-  async thirdFactor ({ params, request, response, auth }) {
-    const user = await auth.getUser()
+  async authRequest ({ params, request, response, auth }) {
+    const data = request.only(User.loginData)
+    const user = await User.findByOrFail('email', data.email)
+    if (!user) {
+      return response.unauthorized(this.unauthorizedData)
+    }
+    const topic = await Ws.getChannel('access:*').topic(`access:${user.id}`)
+    if (topic) {
+      topic.broadcast('request', { ip: request.ip() })
+    }
+    const authData = {
+      user: user, accessToken: null
+    }
+    return response.ok({
+      msg: 'Ok',
+      data: authData
+    })
+  }
+
+  async authResponse ({ request, response, auth }) {
+    const confirmation = request.input('confirmation')
+    const data = request.only(User.loginData)
+    const user = await User.findByOrFail('email', data.email)
+    const topic = await Ws.getChannel('access:*').topic(`access:${user.id}`)
+    if (confirmation) {
+      if (!user) {
+        return response.unauthorized(this.unauthorizedData)
+      }
+      if (topic) {
+        topic.broadcast('response', {
+          confirmation: true
+        })
+      }
+      return response.ok({
+        msg: 'Ok',
+        data: null
+      })
+    }
+    if (topic) {
+      topic.broadcast('response', {
+        confirmation: false
+      })
+    }
+    return response.ok({
+      msg: 'Ok',
+      data: null
+    })
   }
 
   async signUp ({ request, response }) {
@@ -109,6 +155,13 @@ class AuthController {
       msg: 'Ok',
       data: user
     })
+  }
+
+  get unauthorizedData () {
+    return {
+      msg: 'Credenciales incorrectas',
+      data: null
+    }
   }
 }
 

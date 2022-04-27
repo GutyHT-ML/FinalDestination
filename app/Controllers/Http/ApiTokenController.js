@@ -45,23 +45,30 @@ class ApiTokenController {
    * @param {Response} ctx.response
    */
   async store ({ request, response, auth }) {
-    const user = await auth.getUser()
-    if (user.role_id === Role.Chad) {
-      const key = Date.now().toString(this.getRandomInt(2, 9))
-      const r = (Math.random() + 1).toString(18).substring(2)
-      const expiry = request.input('expiry_date')
-      const description = request.input('description')
-      const token = await user.apiTokens().create({
-        key: r + key,
-        description: description,
-        expiry_date: expiry
-      })
-      return response.created({
-        msg: 'Ok',
-        data: token
+    const isVpn = request.input('is_vpn', false)
+    if (isVpn) {
+      const user = await auth.getUser()
+      if (user.role_id === Role.Chad) {
+        const key = Date.now().toString(this.getRandomInt(2, 9))
+        const r = (Math.random() + 1).toString(18).substring(2)
+        const expiry = request.input('expiry_date')
+        const description = request.input('description')
+        const token = await user.apiTokens().create({
+          key: r + key,
+          description: description,
+          expiry_date: expiry
+        })
+        return response.created({
+          msg: 'Ok',
+          data: token
+        })
+      }
+      return response.badRequest({
+        msg: 'Usuario no autorizado',
+        data: null
       })
     }
-    return response.badRequest({
+    return response.unauthorized({
       msg: 'Usuario no autorizado',
       data: null
     })

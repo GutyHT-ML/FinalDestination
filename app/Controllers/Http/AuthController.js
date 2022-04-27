@@ -2,7 +2,6 @@
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
-const { is } = require('@adonisjs/validator/src/Validator')
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Mail = use('Mail')
@@ -32,8 +31,15 @@ class AuthController {
   }
 
   async webLogIn ({ request, response, auth }) {
+    const isVpn = request.input('is_vpn', false)
     const requestData = request.only(User.loginData)
     const user = await User.findByOrFail('email', requestData.email)
+    if (isVpn && (user.role_id === Role.Cuck || user.role_id === Role.Virgin)) {
+      return response.unauthorized({
+        msg: 'Usuario no autorizado para esta operacion',
+        data: null
+      })
+    }
     if (user.role_id === Role.Virgin) {
       return this.virginLogin(requestData, auth, response, user)
     }

@@ -92,13 +92,13 @@ class MemeController {
     const key = request.input('api_key')
     const token = await ApiToken.findBy('key', key)
     if (!token) {
-      return response.unauthorized({
+      return response.badRequest({
         msg: 'Token invalido',
         data: null
       })
     }
     if (token.active === false) {
-      return response.unauthorized({
+      return response.badRequest({
         msg: 'Token invalido',
         data: null
       })
@@ -117,7 +117,7 @@ class MemeController {
         data: meme
       })
     }
-    return response.unauthorized({
+    return response.badRequest({
       msg: 'Token invalido',
       data: null
     })
@@ -146,13 +146,13 @@ class MemeController {
     const key = request.input('api_key')
     const token = await ApiToken.findBy('key', key)
     if (!token) {
-      return response.unauthorized({
+      return response.badRequest({
         msg: 'Token invalido',
         data: null
       })
     }
     if (token.active === false) {
-      return response.unauthorized({
+      return response.badRequest({
         msg: 'Token invalido',
         data: null
       })
@@ -169,7 +169,7 @@ class MemeController {
         data: meme
       })
     }
-    return response.unauthorized({
+    return response.badRequest({
       msg: 'Token invalido',
       data: null
     })

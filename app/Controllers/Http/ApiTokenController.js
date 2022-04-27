@@ -24,7 +24,7 @@ class ApiTokenController {
   async index ({ request, response, auth }) {
     const user = await auth.getUser()
     if (user.role_id === Role.Chad) {
-      return response.unauthorized({
+      return response.badRequest({
         msg: 'Usuario no autorizado',
         data: null
       })
@@ -61,7 +61,7 @@ class ApiTokenController {
         data: token
       })
     }
-    return response.unauthorized({
+    return response.badRequest({
       msg: 'Usuario no autorizado',
       data: null
     })
@@ -83,7 +83,7 @@ class ApiTokenController {
   async show ({ params, request, response, view, auth }) {
     const user = await auth.getUser()
     if (user.role_id === Role.Chad) {
-      return response.unauthorized({
+      return response.badRequest({
         msg: 'Usuario no autorizado',
         data: null
       })
@@ -106,7 +106,7 @@ class ApiTokenController {
   async destroy ({ params, request, response, auth }) {
     const user = await auth.getUser()
     if (user.role_id === Role.Chad) {
-      return response.unauthorized({
+      return response.badRequest({
         msg: 'Usuario no autorizado',
         data: null
       })

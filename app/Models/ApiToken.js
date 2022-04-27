@@ -27,11 +27,22 @@ class ApiToken extends Model {
     // })
 
     this.addHook('beforeSave', async (instance) => {
-      instance.active = instance.used_by == null
+      const exp = Date.parse(instance.expiry_date)
+      if (exp <= Date.now() || instance.used_by != null) {
+        instance.active = false
+      } else {
+        instance.active = true
+      }
     })
 
     this.addHook('afterFind', async (instance) => {
-      if (!instance.active || instance.used_by !== null) {
+      const exp = Date.parse(instance.expiry_date)
+      if (exp <= Date.now() || instance.used_by != null) {
+        instance.active = false
+      } else {
+        instance.active = true
+      }
+      if (!instance.active || instance.used_by != null) {
         instance.$hidden = ['key']
       }
     })

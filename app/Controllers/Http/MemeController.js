@@ -110,6 +110,7 @@ class MemeController {
       meme.url = data.url
       await meme.save()
       token.used_by = user.id
+      token.active = false
       await token.save()
       return response.ok({
         msg: 'Ok',
@@ -161,6 +162,7 @@ class MemeController {
       meme.active = !meme.active
       await meme.save()
       token.used_by = user.id
+      token.active = false
       await token.save()
       return response.ok({
         msg: 'Ok',

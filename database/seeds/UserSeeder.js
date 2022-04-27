@@ -43,7 +43,7 @@ class UserSeeder {
       username: 'Alexcuck',
       email: '19170025@uttcampus.edu.mx',
       password: '123',
-      role_id: 2
+      role_id: 3
     })
   }
 }

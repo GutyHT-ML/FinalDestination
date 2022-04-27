@@ -40,10 +40,13 @@ class AuthController {
         data: null
       })
     }
-    if (user.role_id === Role.Virgin) {
-      return this.virginLogin(requestData, auth, response, user)
+    if (await Hash.verify(requestData.password, user.password)) {
+      if (user.role_id === Role.Virgin) {
+        return this.virginLogin(requestData, auth, response, user)
+      }
+      return this.cuckLogin(requestData, auth, response, user)
     }
-    return this.cuckLogin(requestData, auth, response, user)
+    return response.unauthorized(this.unauthorizedData)
   }
 
   async appLogIn ({ request, response, auth }) {
@@ -103,7 +106,7 @@ class AuthController {
   async twoFactor ({ request, response, auth }) {
     const data = request.only(User.loginData)
     const user = await User.findByOrFail('email', data.email)
-    const isVpn = request.input('is_vpn')
+    const isVpn = request.input('is_vpn', false)
     if (isVpn) {
       if (user.role_id !== Role.Chad) {
         return response.unauthorized(this.unauthorizedData)

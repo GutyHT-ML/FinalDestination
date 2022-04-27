@@ -2,6 +2,7 @@
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
+const { is } = require('@adonisjs/validator/src/Validator')
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Mail = use('Mail')
@@ -96,8 +97,14 @@ class AuthController {
   async twoFactor ({ request, response, auth }) {
     const data = request.only(User.loginData)
     const user = await User.findByOrFail('email', data.email)
+    const isVpn = request.input('is_vpn')
+    if (isVpn) {
+      if (user.role_id !== Role.Chad) {
+        return response.unauthorized(this.unauthorizedData)
+      }
+    }
     if (await Hash.verify(request.input('login_token'), user.login_token)) {
-      if (user.role_id === Role.Cuck) {
+      if (user.role_id === Role.Cuck || isVpn) {
         return this.login(data, auth, response, user)
       }
       const authData = {

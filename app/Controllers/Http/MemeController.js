@@ -24,7 +24,9 @@ class MemeController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
-    const memes = await Meme.all()
+    const memes = await Meme.query()
+      .where('active', true)
+      .fetch()
     return response.ok({
       msg: 'Ok',
       data: memes

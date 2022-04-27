@@ -15,6 +15,21 @@ const Ws = use('Ws')
  * Resourceful controller for interacting with auths
  */
 class AuthController {
+  async checkRefresh({ request, response, auth }) {
+    const refreshToken = request.input('refresh_token')
+    if (refreshToken == null || refreshToken === '') {
+      return response.badRequest({
+        msg: 'Sesion expirada',
+        data: null
+      })
+    }
+    const token = await auth.newRefreshToken().generateForRefreshToken(refreshToken)
+    return response.ok({
+      msg: 'Ok',
+      data: token
+    })
+  }
+
   async webLogIn ({ request, response, auth }) {
     const requestData = request.only(User.loginData)
     const user = await User.findByOrFail('email', requestData.email)

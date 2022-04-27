@@ -47,6 +47,8 @@ Route.post('sign-up', 'AuthController.signUp')
   .validator('Signup')
   .middleware(['guest'])
 
+Route.post('check-refresh', 'AuthController.checkRefresh')
+
 Route.post('two-factor', 'AuthController.twoFactor')
   .validator('Login')
   .middleware(['guest'])

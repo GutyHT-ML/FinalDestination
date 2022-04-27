@@ -8,18 +8,18 @@ class AccessController {
 
   onRequest (data) {
     console.log(data)
+    console.log(this.socket.topic)
   }
 
   onResponse (data) {
     console.log(data)
   }
 
-  onLogin (data) {
-    console.log(data.grantedAccess)
-  }
-
-  onAuth (data) {
+  onMessage (data) {
     console.log(data)
+    console.log(this.socket.topic)
+    console.log(this.socket.event)
+    this.socket.broadcastToAll('message', data)
   }
 }
 
